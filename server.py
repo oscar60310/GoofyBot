@@ -4,41 +4,102 @@ import tornado.ioloop
 import tornado.web
 import uuid
 import json
+import time
+from database.member import setting
 class WSHandler(tornado.websocket.WebSocketHandler):
     def open(self):
+        self.type = "none"
+        self.login = 'false'
+        
         self.id = uuid.uuid4()
-        wss.append(self)
-        msg('new connect - %s' % self.id)
-        self.write_message(str(self.id));
+        self.server.wss.append(self)
+        self.server.msg('new connect - %s' % self.id)
+        resp = {
+            'uuid': str(self.id)
+        }
+        self.write_message(resp);
     def on_message(self, message):
-        rec(self,message)
+        self.server.rec(message,self)
     def on_close(self):
-        msg('connection closed')
-        wss.remove(self)
+        self.server.msg('connection closed %s' % self.id)
+        self.server.wss.remove(self)
     def check_origin(self, origin):
         return True
-application = tornado.web.Application([
+class serverControl():
+  def __init__(self,cfg):
+    self.wss = []
+    self.WSHandler = WSHandler
+    self.WSHandler.server = self
+    self.cfg = cfg
+
+  
+
+  # start server
+  def start_server(self):
+    application = tornado.web.Application([
     (r'/ws', WSHandler),
-])
-http_server = []
-wss = []
-def rec(ws,msg):
-  try:
+    ])
+    self.http_server = tornado.httpserver.HTTPServer(application)
+    self.http_server.listen(10000)
+    self.msg('Start listening')
+    tornado.ioloop.IOLoop.instance().start()
+  def msg(self,m):
+    print '%s [WebScoket] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
+
+  #stop server
+  def stop_server(self):
+    tornado.ioloop.IOLoop.instance().stop()
+    self.msg("server stop")
+  #receive msg
+  def rec(self,msg,ws):
     data = json.loads(msg)
-    print(data['type'])
-  except:
-    msg('Kick error connect %s' % ws.id)
-    ws.close()
-    ws = []
+    if data['type'] == 'login':
+      if ws.type == 'none':
+        from database.member import setting
+        ws.setting = setting(self.cfg)
+        ws.type = 'setting'
 
-def msg(m):
-  print '[WebScoket] %s' % m
-def start_server():
-  http_server = tornado.httpserver.HTTPServer(application)
-  http_server.listen(10000)
-
-  msg('Start listening')
-  tornado.ioloop.IOLoop.instance().start()
-def stop_server():
-  tornado.ioloop.IOLoop.instance().stop()
-  msg("server stop")
+      #setting page login
+      try:
+        if ws.setting.logined:
+          resp = {
+            'code': 201,
+            'description': "Has logined."
+          }
+          ws.write_message(resp)
+        elif ws.setting.login(data['content']['user'],data['content']['pass'],ws.id):
+          resp = {
+            'code': 200,
+            'description': "OK"
+          }
+          ws.write_message(resp)
+          ws.user = data['content']['user']
+          ws.login = 'true'
+        else:
+          resp = {
+            'code': 403,
+            'description': "Error password or username"
+          }
+          ws.write_message(resp)   
+      except:
+        self.msg('Id: %s login fail.' % ws.id)
+        resp = {
+            'code': 501,
+            'description': "Login fail, client error."
+        }
+        ws.write_message(resp)
+    #self.msg(data['type'])
+    elif data['type'] == 'get_setting_data':
+      if ws.login != 'true':
+        resp = {
+            'code': 401,
+            'description': "Not login."
+        }
+        ws.write_message(resp)
+      else:
+        resp = {
+            'code': 200,
+            'description': "OK",
+            'content': ws.setting.getdata()
+        }
+        ws.write_message(resp)  
