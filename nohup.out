@@ -1,0 +1,21 @@
+BotGoofy start loading.
+Aug 16 2016 19:48:39 [Twitch] try to connect twitch server.
+Aug 16 2016 19:48:39 [Twitch] twitch server connected.
+Aug 16 2016 19:48:39 [Twitch] start receive message.
+Traceback (most recent call last):
+  File "main.py", line 14, in <module>
+    com = raw_input("")
+IOError: [Errno 9] Bad file descriptor
+Aug 16 2016 19:48:39 [Twitch] start message timer.
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 001 botgoofy :Welcome, GLHF!
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 002 botgoofy :Your host is tmi.twitch.tv
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 003 botgoofy :This server is rather new
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 004 botgoofy :-
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 375 botgoofy :-
+Aug 16 2016 19:48:39 [Twitch] i.twitch.tv 372 botgoofy :You are in a maze of twisty passages, all alike.
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv 376 botgoofy :>
+Aug 16 2016 19:48:39 [Twitch] :botgoofy!botgoofy@botgoofy.tmi.twitch.tv JOIN #botgoofy
+Aug 16 2016 19:48:39 [Twitch] :botgoofy.tmi.twitch.tv 353 botgoofy = #botgoofy :botgoofy
+Aug 16 2016 19:48:39 [Twitch] :botgoofy.tmi.twitch.tv 366 botgoofy #botgoofy :End of /NAMES list
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv CAP * ACK :twitch.tv/commands
+Aug 16 2016 19:48:39 [Twitch] :tmi.twitch.tv USERSTATE #botgoofy
