@@ -31,3 +31,9 @@ class setting:
       return userdata['data']
     else:
       return None
+  def cleck_user(self,name):
+    userdatas = self.client.user.find({"name":name})
+    if userdatas.count() == 0:
+      return False
+    else:
+      return True

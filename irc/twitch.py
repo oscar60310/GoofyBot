@@ -93,6 +93,7 @@ class twitch:
         # sendTO bot chat room
         if msg_data[0] == '!':
           self.send_to_room(self.botname,sendFrom + ' Please use /w botgoofy [msg] instead of send command in chat room')
+          self.send_to_room(self.botname,"/timeout %s 1" % sendFrom)
     elif msgs.split(' ')[1] == "WHISPER":
       # user WHISPER
       sendFrom = msgs.split(' ')[0].split('!')[0].split(':')[1]
