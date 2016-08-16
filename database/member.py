@@ -37,3 +37,7 @@ class setting:
       return False
     else:
       return True
+  def register(self,name):
+    self.client.user.insert_one({
+      'name': name
+    })

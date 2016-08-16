@@ -11,7 +11,9 @@ class botroom:
       if self.setting.cleck_user(who):
         self.whisper(who,'您已經註冊過了，您可以使用 !join 指令讓機器人加入您的聊天室')
       else:
-        self.whisper(who,'ok')
+        self.setting.register(who)
+        self.whisper(who,'註冊完成，謝謝您的使用。您可以使用 !join 指令讓機器人加入您的聊天室')
+        self.whisper(who,'所有指令都是由私訊傳送，請不要在聊天室中下指令喔 :)')
   def msg(self,m):
     print '%s [BotRoom] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def whisper(self, to ,m):

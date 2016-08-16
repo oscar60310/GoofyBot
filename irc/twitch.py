@@ -92,7 +92,7 @@ class twitch:
       if sendTo == self.botname:
         # sendTO bot chat room
         if msg_data[0] == '!':
-          self.send_to_room(self.botname,sendFrom + ' Please use /w botgoofy [msg] instead of send command in chat room')
+          self.send_to_room(self.botname,sendFrom + ' 請使用私訊方式(/w botgoofy [指令])來執行指令喔')
           self.send_to_room(self.botname,"/timeout %s 1" % sendFrom)
     elif msgs.split(' ')[1] == "WHISPER":
       # user WHISPER
