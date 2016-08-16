@@ -2,6 +2,7 @@
 import socket 
 import time
 import threading
+from irc.botroom import botroom
 class twitch:
   def __init__(self,cfg):
     self.cfg = cfg
@@ -9,6 +10,7 @@ class twitch:
     self.timer = 0
     self.msg_sended = 0
     self.botname = cfg['bot_name']
+    self.botroom = botroom(self)
   def msg(self,m):
     print '%s [Twitch] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def connect(self):
@@ -29,6 +31,7 @@ class twitch:
       self.send('PASS ' + self.cfg['bot_pass'] + '\n')
       self.send('NICK ' + self.cfg['bot_name'] + '\n')
       self.send('JOIN #'+ self.cfg['bot_name'] + '\n')
+      self.send('CAP REQ :twitch.tv/commands\n')
       # Welcome msg
       self.send_to_room(self.botname,'Bot service connected.')
       return True
@@ -51,6 +54,7 @@ class twitch:
       ss = tmp.split('\n')
       for ns in range(len(ss)-1):
         self.msg(ss[ns][0:len(ss[ns])-1])
+        self.handle_msg(ss[ns][0:len(ss[ns])-1])
       tmp = ss[len(ss)-1]
   def recv_func(self):
     self.msg('start receive message.')
@@ -77,7 +81,28 @@ class twitch:
     if msgs == "PING :tmi.twitch.tv":
       self.msg('respond ping request.')
       self.send('PONG :tmi.twitch.tv\n')
+    elif msgs.split(' ')[1] == "PRIVMSG":
+      # user message
+      sendFrom = msgs.split(' ')[0].split('!')[0].split(':')[1]
+      sendTo = msgs.split(' ')[2].split('#')[1]
+      msg_data = ""
+      data = msgs.split(':')
+      for k in range(2,len(data)):
+        msg_data += data[k]
+      if sendTo == self.botname:
+        # sendTO bot chat room
+        if msg_data[0] == '!':
+          self.send_to_room(self.botname,sendFrom + ' Please use /w botgoofy [msg] instead of send command in chat room')
+    elif msgs.split(' ')[1] == "WHISPER":
+      # user WHISPER
+      sendFrom = msgs.split(' ')[0].split('!')[0].split(':')[1]
+      msg_data = ""
+      data = msgs.split(':')
+      for k in range(2,len(data)):
+        msg_data += data[k]
+      if msg_data[0] == '!':
+         self.botroom.command(msg_data,sendFrom)  
   def send_to_room(self,room,msgs):
     self.send('PRIVMSG #{0} :{1}\n'.format(room,msgs))
-
+  
       
