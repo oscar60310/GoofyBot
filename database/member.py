@@ -111,4 +111,13 @@ class setting:
       return False
   def setEditNickInRoom(self,user,value):
     self.client.user.update_one({"name": user},{'$set':{'room_edit_nick':value}})
-  
+  def cando(self,user,dowhat):
+    userdata = self.client.user.find({"name": user})
+    if userdata[0].has_key(dowhat):
+      return userdata[0][dowhat]
+    else:
+      self.client.user.update_one({"name": user},{'$set':{dowhat:False}})
+      return False
+  def setCanDo(self,user,dowhat,value):
+    self.client.user.update_one({"name": user},{'$set':{dowhat:value}})  
+    

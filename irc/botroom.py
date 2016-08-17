@@ -67,6 +67,18 @@ class botroom:
             self.whisper(who,'不開放觀眾自由修改暱稱')
           else:
             self.whisper(who,'!設定暱稱 [開啟/關閉]')
+      elif args[0] == "!猜拳":
+        if len(args) != 2:
+          self.whisper(who,'!猜拳 [開啟/關閉]')
+        else:
+          if args[1] == '開啟':
+            self.setting.setCanDo(who,'guess',True)
+            self.whisper(who,'開放觀眾猜拳')
+          elif args[1] == "關閉":
+            self.setting.setCanDo(who,'guess',False)
+            self.whisper(who,'不開放觀眾猜拳')
+          else:
+            self.whisper(who,'!猜拳 [開啟/關閉]')
   def msg(self,m):
     print '%s [BotRoom] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def whisper(self, to ,m):
