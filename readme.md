@@ -8,4 +8,4 @@
 !nick [twitch id] [nick] | 新增或修改暱稱
 !nickrm [twitch id] | 移除暱稱
 !say [訊息] | 讓機器人在你的聊天室說話(不能打指令)
-!room | 取得條天是連結
+!room | 取得條天室連結
