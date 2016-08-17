@@ -7,3 +7,4 @@
 !leave | 讓機器人離開聊天室
 !nick [twitch id] [nick] | 新增或修改暱稱
 !nickrm [twitch id] | 移除暱稱
+!say [訊息] | 讓機器人在你的聊天室說話(不能打指令)

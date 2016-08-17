@@ -39,7 +39,18 @@ class botroom:
             self.whisper(who,'成功將 %s 的暱稱移除' % args[1])
           else:
             self.whisper(who,'%s 還沒有設定暱稱' % args[1])
-         
+      elif args[0] == "!say":
+        if len(args) < 2:
+          self.whisper(who,'!say [訊息]')
+        else:
+          if args[1][0] == '/':
+            self.whisper(who,'不可以輸入指令喔')
+          else:
+            msg_to = ''
+            for k in range(1,len(args)):
+              msg_to += args[k] + " "
+            self.whisper(who,'沒問題')
+            self.twitch.send_to_room(who,msg_to)  
   def msg(self,m):
     print '%s [BotRoom] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def whisper(self, to ,m):
