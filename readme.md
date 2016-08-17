@@ -4,3 +4,6 @@
 ------------ | -------------
 !註冊 或 !regisrer | 註冊資料，只需要執行一次
 !join | 讓機器人加入聊天室，要先註冊
+!leave | 讓機器人離開聊天室
+!nick [twitch id] [nick] | 新增或修改暱稱
+!nickrm [twitch id] | 移除暱稱

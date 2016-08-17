@@ -41,3 +41,38 @@ class setting:
     self.client.user.insert_one({
       'name': name
     })
+  def change_nick(self,who,twitchid,nick):
+    
+    try:
+      nick_userdata = self.client.user.find({"name": who})[0]['data']['spe_name']
+    except:
+      self.client.user.update_one({"name": who},{"$set":{"data.spe_name":[]}})
+      nick_userdata = self.client.user.find({"name": who})[0]['data']['spe_name']
+    exist = False
+    for nickdata in nick_userdata:
+      if nickdata['name'] == twitchid:
+        nickdata['nick'] = nick
+        exist = True
+        break
+    if not exist:
+      nick_userdata.append({
+        'name': twitchid,
+        'nick': nick
+      })
+    self.client.user.update_one({"name": who},{'$set':{'data.spe_name':nick_userdata}})
+    return exist
+  def rm_nick(self,who,twitch):
+    try:
+      nick_userdata = self.client.user.find({"name": who})[0]['data']['spe_name']
+    except:
+      self.client.user.update_one({"name": who},{"$set":{"data.spe_name":[]}})
+      nick_userdata = self.client.user.find({"name": who})[0]['data']['spe_name']
+    exist = False
+    for i in xrange(len(nick_userdata)):
+      if nick_userdata[i]['name'] == twitch:
+        nick_userdata.pop(i)
+        exist = True
+        break
+    self.client.user.update_one({"name": who},{'$set':{'data.spe_name':nick_userdata}})
+    return exist
+    

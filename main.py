@@ -11,11 +11,7 @@ twitch = twitch(cfg)
 # start twitch connect
 twitch.start()
 
-#while True:
-#  com = raw_input("")
-#  if com == 'q':
-#   twitch.stop()
-#    break
 import time
 while True:
   time.sleep(10)
+twitch.stop()

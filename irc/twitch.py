@@ -79,7 +79,7 @@ class twitch:
     #self.msg(' [send] ' + msgs)
   def handle_msg(self,msgs):
     if msgs == "PING :tmi.twitch.tv":
-      self.msg('respond ping request.')
+      #self.msg('respond ping request.')
       self.send('PONG :tmi.twitch.tv\n')
     elif msgs.split(' ')[1] == "PRIVMSG":
       # user message
