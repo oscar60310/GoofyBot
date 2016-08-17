@@ -55,6 +55,18 @@ class botroom:
       elif args[0] == "!room":
         token = self.setting.get_room_token(who)
         self.whisper(who,'http://goofydog.me/bot/room.html?%s!%s' % (who.replace(" ", ""),token))
+      elif args[0] == "!設定暱稱":
+        if len(args) != 2:
+          self.whisper(who,'!設定暱稱 [開啟/關閉]')
+        else:
+          if args[1] == '開啟':
+            self.setting.setEditNickInRoom(who,True)
+            self.whisper(who,'開放觀眾自由修改暱稱')
+          elif args[1] == "關閉":
+            self.setting.setEditNickInRoom(who,False)
+            self.whisper(who,'不開放觀眾自由修改暱稱')
+          else:
+            self.whisper(who,'!設定暱稱 [開啟/關閉]')
   def msg(self,m):
     print '%s [BotRoom] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def whisper(self, to ,m):

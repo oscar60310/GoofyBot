@@ -102,3 +102,13 @@ class setting:
   def rd(self,N):
     import random,string
     return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))
+  def canEditNickInRoom(self,user):
+    userdata = self.client.user.find({"name": user})
+    if userdata[0].has_key('room_edit_nick'):
+      return userdata[0]['room_edit_nick']
+    else:
+      self.client.user.update_one({"name": user},{'$set':{'room_edit_nick':False}})
+      return False
+  def setEditNickInRoom(self,user,value):
+    self.client.user.update_one({"name": user},{'$set':{'room_edit_nick':value}})
+  

@@ -3,6 +3,7 @@ import socket
 import time
 import threading
 from irc.botroom import botroom
+from irc.room import room
 class twitch:
   def __init__(self,cfg):
     self.cfg = cfg
@@ -11,6 +12,7 @@ class twitch:
     self.msg_sended = 0
     self.botname = cfg['bot_name']
     self.botroom = botroom(self)
+    self.room = room(self)
   def msg(self,m):
     print '%s [Twitch] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def connect(self):
@@ -107,6 +109,7 @@ class twitch:
               'nick': self.botroom.setting.nick(sendTo,sendFrom)
             }
             ws.write_message(data)
+        self.room.handle_msg(sendTo,sendFrom,msg_data)
 
     elif msgs.split(' ')[1] == "WHISPER":
       # user WHISPER
