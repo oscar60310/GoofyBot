@@ -40,7 +40,7 @@ function onMessage(evt)
     }
     else if(s.type == 'msg')
     {
-         alert_msg(s.nick + ": " + s.msg,'2');
+         alert_msg("<span class='twitch_name'>"+ s.nick +"</span>: " + s.msg,'2');
     }
    // alert_msg(s,'1');
 }  
