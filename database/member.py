@@ -75,4 +75,30 @@ class setting:
         break
     self.client.user.update_one({"name": who},{'$set':{'data.spe_name':nick_userdata}})
     return exist
-    
+  def nick(self,room,id):
+    try:
+      nick_userdata = self.client.user.find({"name": room})[0]['data']['spe_name']
+      for nickdata in nick_userdata:
+        if nickdata['name'] == id:
+          return nickdata['nick']
+          break
+      return id
+    except:
+      return id
+  def token_check(self,user,token):
+    userdata = self.client.user.find({"name": user,"room_token": token})
+    if userdata.count() == 0:
+      return False
+    else:
+      return True
+  def get_room_token(self,user):
+    userdata = self.client.user.find({"name": user})
+    if userdata[0].has_key('room_token'):
+      return userdata[0]['room_token']
+    else:
+      token = self.rd(50)
+      self.client.user.update_one({"name": user},{'$set':{'room_token':token}})
+      return token
+  def rd(self,N):
+    import random,string
+    return ''.join(random.choice(string.ascii_uppercase + string.digits) for _ in range(N))

@@ -15,9 +15,11 @@ class WSHandler(tornado.websocket.WebSocketHandler):
         self.server.wss.append(self)
         self.server.msg('new connect - %s' % self.id)
         resp = {
-            'uuid': str(self.id)
+            'uuid': str(self.id),
+            'type': 'id'
         }
         self.write_message(resp);
+       
     def on_message(self, message):
         self.server.rec(message,self)
     def on_close(self):
@@ -26,12 +28,13 @@ class WSHandler(tornado.websocket.WebSocketHandler):
     def check_origin(self, origin):
         return True
 class serverControl():
-  def __init__(self,cfg):
+  def __init__(self,cfg,twitch):
     self.wss = []
     self.WSHandler = WSHandler
     self.WSHandler.server = self
     self.cfg = cfg
-
+    self.twitch = twitch
+    twitch.web = self
   
 
   # start server
@@ -102,4 +105,27 @@ class serverControl():
             'description': "OK",
             'content': ws.setting.getdata()
         }
-        ws.write_message(resp)  
+        ws.write_message(resp)
+    elif data['type'] == 'token_login':
+      ok = False
+      try:
+        ok = self.twitch.botroom.setting.token_check(data['user'],data['token'])
+      except:
+        ok = False
+      if ok:
+        self.twitch.send('JOIN #'+ data['user'] + '\n')
+        ws.user = data['user']
+        ws.type = 'room'
+        resp = {
+          'type': 'login',
+          'code': 200,
+          'description': "OK",
+        }
+        ws.write_message(resp)
+      else:
+        resp = {
+          'type': 'login',
+          'code': 403,
+          'description': "password or username error",
+        }
+        ws.write_message(resp)

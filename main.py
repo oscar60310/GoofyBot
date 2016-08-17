@@ -11,6 +11,14 @@ twitch = twitch(cfg)
 # start twitch connect
 twitch.start()
 
+from server import serverControl
+import threading
+
+server = serverControl(cfg,twitch)
+server_thread = threading.Thread(target = server.start_server)
+server_thread.daemon = True 
+server_thread.start()
+
 import time
 while True:
   time.sleep(10)

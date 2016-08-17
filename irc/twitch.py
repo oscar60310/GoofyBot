@@ -81,6 +81,8 @@ class twitch:
     if msgs == "PING :tmi.twitch.tv":
       #self.msg('respond ping request.')
       self.send('PONG :tmi.twitch.tv\n')
+    if len(msgs.split(' ')) < 2:
+      return
     elif msgs.split(' ')[1] == "PRIVMSG":
       # user message
       sendFrom = msgs.split(' ')[0].split('!')[0].split(':')[1]
@@ -94,6 +96,18 @@ class twitch:
         if msg_data[0] == '!':
           self.send_to_room(self.botname,sendFrom + ' 請使用私訊方式(/w botgoofy [指令])來執行指令喔')
           self.send_to_room(self.botname,"/timeout %s 1" % sendFrom)
+      else:
+        # sendTo other room
+        for ws in self.web.wss:
+          if ws.user == sendTo:
+            data = {
+              'type': 'msg',
+              'from': sendFrom,
+              'msg': msg_data,
+              'nick': self.botroom.setting.nick(sendTo,sendFrom)
+            }
+            ws.write_message(data)
+
     elif msgs.split(' ')[1] == "WHISPER":
       # user WHISPER
       sendFrom = msgs.split(' ')[0].split('!')[0].split(':')[1]

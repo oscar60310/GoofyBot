@@ -5,6 +5,7 @@ class botroom:
   def __init__(self,twitch):
     self.twitch = twitch
     self.setting = setting(twitch.cfg)
+    
   def command(self,msgs,who):
     args = msgs.split(' ')
     #self.msg(msgs)
@@ -50,7 +51,10 @@ class botroom:
             for k in range(1,len(args)):
               msg_to += args[k] + " "
             self.whisper(who,'沒問題')
-            self.twitch.send_to_room(who,msg_to)  
+            self.twitch.send_to_room(who,msg_to)
+      elif args[0] == "!room":
+        token = self.setting.get_room_token(who)
+        self.whisper(who,'http://goofydog.me/bot/room.html?%s!%s' % (who.replace(" ", ""),token))
   def msg(self,m):
     print '%s [BotRoom] %s' % (time.strftime("%b %d %Y %H:%M:%S"),m)
   def whisper(self, to ,m):
